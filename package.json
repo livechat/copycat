@@ -1,0 +1,16 @@
+{
+  "name": "github-synchronizator",
+  "version": "0.0.1",
+  "description": "Synchronize github repositories with common files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Konrad Kruk",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3",
+    "github": "^9.2.0",
+    "lodash": "^4.17.4"
+  }
+}
