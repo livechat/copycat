@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const bodyParser = require('body-parser')
 const app = express()
 const jsonParser = bodyParser.json()
@@ -6,7 +7,6 @@ const flatten = require('lodash/fp/flatten')
 const find = require('lodash/fp/find')
 const filter = require('lodash/fp/filter')
 const startsWith = require('lodash/fp/startsWith')
-const trimStart = require('lodash/trimStart')
 const GitHubApi = require('github')
 
 const config = require('./config.json')
@@ -66,13 +66,37 @@ const updateFile = (owner, repo, path, branch, sha, content) => {
     })
 }
 
+const createFile = (owner, repo, path, branch, content) => {
+    return new Promise((resolve, reject) => {
+        github.repos.createFile({
+            owner: owner,
+            repo: repo,
+            path: path,
+            message: 'Synchronize ' + path,
+            content: content,
+            branch: branch,
+        }, (error, response) => {
+            if (error) {
+                return reject(error)
+            }
+            resolve(response)
+        })
+    })
+}
+
 const copyFileBetweenRepositories = (from, to) => {
     const orginalResponsePromise = getFileContent(from.owner, from.repository, from.file, from.branch)
     const destinationResponsePromise = getFileContent(to.owner, to.repository, to.file, to.branch)
+        .catch((error) => {
+            console.log('no destination', error)
+            return false
+        })
     return Promise.all([ orginalResponsePromise, destinationResponsePromise ])
         .then((responses) => {
             const [ orginalResponse, destinationResponse ] = responses
-            console.log('params: ', to.owner, to.repository, to.file, to.branch, destinationResponse.data.sha)
+            if (!destinationResponse) {
+                return createFile(to.owner, to.repository, to.file, to.branch, orginalResponse.data.content)
+            }
             updateFile(to.owner, to.repository, to.file, to.branch, destinationResponse.data.sha, orginalResponse.data.content)
         })
 }
@@ -127,7 +151,7 @@ app.post('/webhook/push', jsonParser, (req, res) => {
                         owner: owner.name,
                     },
                     to: {
-                        file: destination.to.path + trimStart(file, destination.from.path),
+                        file: destination.to.path + path.basename(file),
                         branch: destination.refsMap[branchName],
                         repository: destination.to.repo,
                         owner: destination.to.owner
@@ -139,11 +163,11 @@ app.post('/webhook/push', jsonParser, (req, res) => {
         return false
     }))
 
-    syncDestinations.reduce((promise, destination) => (
-        promise
+    syncDestinations.reduce((promise, destination) => {
+        return promise
             .catch((error) => console.log('> error', error))
             .then(() => copyFileBetweenRepositories(destination.from, destination.to))
-    ), Promise.resolve([]))
+    }, Promise.resolve([]))
 
     console.log('> Webhook parsed, sending response')
     res.send('ok')
