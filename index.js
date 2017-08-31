@@ -6,6 +6,7 @@ const jsonParser = bodyParser.json()
 const flatten = require('lodash/fp/flatten')
 const find = require('lodash/fp/find')
 const filter = require('lodash/fp/filter')
+const uniq = require('lodash/fp/uniq')
 const startsWith = require('lodash/fp/startsWith')
 const GitHubApi = require('github')
 
@@ -135,9 +136,10 @@ app.post('/webhook/push', jsonParser, (req, res) => {
     const filteredCommits = filter((commit) => {
         return !commit.distinct
     }, commits)
-    const modifiedFiles = flatten(filteredCommits.map((commit) => {
+    const modifiedFiles = uniq(flatten(filteredCommits.map((commit) => {
         return commit.modified
-    }))
+    })))
+    console.log('> modifiedFiles', modifiedFiles)
 
     const syncDestinations = flatten(modifiedFiles.map((file) => {
         const destinations = getFileDestinations(branchName, repository.name, owner.name, file)
@@ -161,7 +163,8 @@ app.post('/webhook/push', jsonParser, (req, res) => {
             return parsedDestinations
         }
         return false
-    }))
+    })).filter(Boolean)
+    console.log('> syncDestinations', syncDestinations)
 
     syncDestinations.reduce((promise, destination) => {
         return promise
