@@ -7,89 +7,22 @@ const flatten = require('lodash/fp/flatten')
 const find = require('lodash/fp/find')
 const filter = require('lodash/fp/filter')
 const uniq = require('lodash/fp/uniq')
+const union = require('lodash/fp/union')
 const startsWith = require('lodash/fp/startsWith')
-const GitHubApi = require('github')
-
 const config = require('./config.json')
-
-const github = new GitHubApi({
-    debug: true,
-    protocol: "https",
-    headers: {
-        "user-agent": config.userAgent
-    },
-    followRedirects: false,
-    timeout: 5000
-});
-
-github.authenticate({
-    type: "token",
-    token: config.token,
-});
+const { getFileContent, updateFile, createFile } = require('./githubUtils')
+const { log, logTypes } = require('./logUtils')
 
 const syncConfig = {
     syncAccountName: config.syncAccountName,
     syncFiles: config.syncFiles
 }
 
-const getFileContent = (owner, repository, file, branch) => {
-    return new Promise((resolve, reject) => {
-        github.repos.getContent({
-            owner: owner,
-            repo: repository,
-            path: file,
-            ref: branch,
-        }, (error, response) => {
-            if (error) {
-                return reject(error)
-            }
-            resolve(response)
-        })
-    })
-}
-
-const updateFile = (owner, repo, path, branch, sha, content) => {
-    return new Promise((resolve, reject) => {
-        github.repos.updateFile({
-            owner: owner,
-            repo: repo,
-            path: path,
-            message: 'Synchronize ' + path,
-            content: content,
-            sha: sha,
-            branch: branch,
-        }, (error, response) => {
-            if (error) {
-                return reject(error)
-            }
-            resolve(response)
-        })
-    })
-}
-
-const createFile = (owner, repo, path, branch, content) => {
-    return new Promise((resolve, reject) => {
-        github.repos.createFile({
-            owner: owner,
-            repo: repo,
-            path: path,
-            message: 'Synchronize ' + path,
-            content: content,
-            branch: branch,
-        }, (error, response) => {
-            if (error) {
-                return reject(error)
-            }
-            resolve(response)
-        })
-    })
-}
-
 const copyFileBetweenRepositories = (from, to) => {
     const orginalResponsePromise = getFileContent(from.owner, from.repository, from.file, from.branch)
     const destinationResponsePromise = getFileContent(to.owner, to.repository, to.file, to.branch)
         .catch((error) => {
-            console.log('no destination', error)
+            log('File doesn\'t exist in targeting repository')
             return false
         })
     return Promise.all([ orginalResponsePromise, destinationResponsePromise ])
@@ -98,7 +31,7 @@ const copyFileBetweenRepositories = (from, to) => {
             if (!destinationResponse) {
                 return createFile(to.owner, to.repository, to.file, to.branch, orginalResponse.data.content)
             }
-            updateFile(to.owner, to.repository, to.file, to.branch, destinationResponse.data.sha, orginalResponse.data.content)
+           return updateFile(to.owner, to.repository, to.file, to.branch, destinationResponse.data.sha, orginalResponse.data.content)
         })
 }
 
@@ -119,7 +52,7 @@ const getFileDestinations = (branch, repo, owner, file) => {
 
 app.post('/webhook/push', jsonParser, (req, res) => {
 
-    console.log('> Received webhook')
+    log('Received webhook')
 
     const { body } = req
     const { ref, repository, commits, pusher } = body
@@ -127,6 +60,7 @@ app.post('/webhook/push', jsonParser, (req, res) => {
 
     // Ignore commits if commit author is bot - avoid loop sync commits
     if (owner.name === syncConfig.syncAccountName) {
+        log('Webhook parsed, own commit, sending response', logTypes.SUCCESS)
         return res.send('ok')
     }
     
@@ -137,9 +71,9 @@ app.post('/webhook/push', jsonParser, (req, res) => {
         return !commit.distinct
     }, commits)
     const modifiedFiles = uniq(flatten(filteredCommits.map((commit) => {
-        return commit.modified
+        return union(commit.modified, commit.added)
     })))
-    console.log('> modifiedFiles', modifiedFiles)
+    log('modifiedFiles: ' + modifiedFiles)
 
     const syncDestinations = flatten(modifiedFiles.map((file) => {
         const destinations = getFileDestinations(branchName, repository.name, owner.name, file)
@@ -164,18 +98,18 @@ app.post('/webhook/push', jsonParser, (req, res) => {
         }
         return false
     })).filter(Boolean)
-    console.log('> syncDestinations', syncDestinations)
+    log('syncDestinations: ' + syncDestinations)
 
     syncDestinations.reduce((promise, destination) => {
         return promise
-            .catch((error) => console.log('> error', error))
+            .catch((error) => log('Error: ' + error, logTypes.ERROR))
             .then(() => copyFileBetweenRepositories(destination.from, destination.to))
     }, Promise.resolve([]))
 
-    console.log('> Webhook parsed, sending response')
+    log('Webhook parsed, sending response', logTypes.SUCCESS)
     res.send('ok')
 })
 
 app.listen(3081, function () {
-  console.log('Github Synchronizator listening on 3081!')
+    log('Github Synchronizator listening on 3081!', logTypes.SUCCESS)
 })
