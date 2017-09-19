@@ -4,10 +4,15 @@
   "description": "Synchronize github repositories with common files",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node index"
+  },
+  "engines": {
+    "node": ">=7.10.0",
+    "npm": ">=4"
   },
   "author": "Konrad Kruk",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.15.3",
     "github": "^9.2.0",
