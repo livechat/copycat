@@ -2,6 +2,7 @@
     "token": "",
     "userAgent": "",
     "syncAccountName": "",
+    "pullRequestBranchPrefix": "",
     "syncFiles": [
         {
             "from": {
