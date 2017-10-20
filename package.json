@@ -2,10 +2,11 @@
   "name": "github-synchronizator",
   "version": "0.0.1",
   "description": "Synchronize github repositories with common files",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "node index"
+    "precommit": "lint-staged",
+    "run": "node lib"
   },
   "engines": {
     "node": ">=7.10.0",
@@ -17,5 +18,10 @@
     "express": "^4.15.3",
     "github": "^9.2.0",
     "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^4.3.0",
+    "prettier": "^1.7.4"
   }
 }
