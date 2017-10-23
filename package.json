@@ -1,5 +1,5 @@
 {
-  "name": "github-synchronizator",
+  "name": "copycat",
   "version": "0.0.1",
   "description": "Synchronize github repositories with common files",
   "main": "lib/index.js",

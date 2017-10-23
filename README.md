@@ -1,9 +1,10 @@
-# Github synchronizator
+# CopyCap
+
 Synchronize files between repositories. This tool:
 - creates a web server,
 - listens to request,
 - parses github webhooks,
-- synchronizes files for specific repositories, branches and files.
+- creates pull request to target repostitory with changes from source repository
 
 ## Requirements
 
