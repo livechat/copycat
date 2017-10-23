@@ -1,4 +1,4 @@
-# CopyCap
+# Copycat
 
 Synchronize files between repositories. This tool:
 - creates a web server,

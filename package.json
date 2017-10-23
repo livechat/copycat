@@ -4,7 +4,7 @@
   "description": "Synchronize github repositories with common files",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "precommit": "lint-staged",
     "run": "node lib"
   },
@@ -15,12 +15,14 @@
   "author": "Konrad Kruk",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.15.3",
-    "github": "^9.2.0",
+    "github": "^9.3.1",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
     "husky": "^0.14.3",
+    "jest": "^21.2.1",
     "lint-staged": "^4.3.0",
     "prettier": "^1.7.4"
   }
