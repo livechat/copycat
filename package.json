@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "precommit": "lint-staged",
-    "run": "node lib"
+    "start": "node lib"
   },
   "engines": {
     "node": ">=7.10.0",
