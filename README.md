@@ -27,7 +27,7 @@ Copy `config.json.tpl` as `config.json` and update config:
 - token - Github account's token you want to use for synchronization
 - userAgent - will be used in requests to Github API
 - syncAccountName - name of the account used to synchronization
-- syncFiless - array of objects with sync config
+- syncFiles - array of objects with sync config
 
 Example config.json:
 
