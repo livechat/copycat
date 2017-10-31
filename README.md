@@ -8,6 +8,8 @@ Synchronize files between repositories. This tool:
 - parses github webhooks,
 - creates pull request to target repostitory with changes from source repository
 
+<img src="https://static.staging.livechatinc.com/1520/OY0O0Q2OFU/c8d6a88d4a2467e03c993acaddd445f7/copycat-chart.png" alt="Copycat - how it works" width="400px">
+
 ## Requirements
 
 - node.js > 7.10
