@@ -90,5 +90,8 @@ Ther easiest way to deploy this software is to use "node as a service" provider.
 
 # Changelog
 
+#### [v0.0.2] - 22.11.2017
+Fix destination directory
+
 #### [v0.0.1] - 2.11.2017
 First public Release
