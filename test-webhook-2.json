@@ -1,0 +1,64 @@
+{
+  "ref": "refs/heads/master",
+  "before": "123",
+  "after": "345",
+  "created": false,
+  "deleted": false,
+  "forced": false,
+  "base_ref": null,
+  "compare": "https://example.org",
+  "commits": [
+    {
+      "id": "id1330",
+      "tree_id": "id1331",
+      "distinct": false,
+      "message": "commit message",
+      "timestamp": "2017-11-21T15:42:37+01:00",
+      "author": {
+        "name": "Loren Acton",
+        "email": "lacton@example.org",
+        "username": "lacton"
+      },
+      "committer": {
+        "name": "Loren Acton",
+        "email": "lacton@example.org",
+        "username": "lacton"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "site/content/customer-api/api-reference/v0.3/README.md"
+      ]
+    }
+  ],
+  "repository": {
+    "id": "id1332",
+    "name": "example-repo3",
+    "full_name": "livechat/example-repo3",
+    "owner": {
+      "name": "example-owner",
+      "email": "support@example.org",
+      "login": "livechat",
+      "id": "id1333",
+      "type": "Organization",
+      "site_admin": false
+    },
+    "private": false,
+    "description": "Example repository",
+    "fork": false
+  },
+  "pusher": {
+    "name": "Loren Acton",
+    "email": "lacton@example.org"
+  },
+  "sender": {
+    "login": "lacton",
+    "id": "id1334",
+    "type": "User",
+    "site_admin": false
+  }
+}
