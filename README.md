@@ -105,6 +105,9 @@ After the deployment, add a webhook to your GitHub repository
 
 # Changelog
 
+#### [v0.0.2] - 22.11.2017
+Fix destination directory
+
 #### [v0.0.1] - 3.11.2017
 First public Release
 

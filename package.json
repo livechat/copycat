@@ -1,6 +1,6 @@
 {
   "name": "copycat",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Synchronize github repositories with common files",
   "main": "lib/index.js",
   "scripts": {
