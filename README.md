@@ -97,11 +97,11 @@ Next, [set up github](https://developer.github.com/webhooks/creating/) to send w
 
 ## Deployment
 
-The easiest way to deploy Copycat is to use a "node as a service" provider([AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/), [Heroku](https://heroku.com) or [Zeit](https://zeit.co/)).
+The easiest way to deploy Copycat is to use a "node as a service" provider ([AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/), [Heroku](https://heroku.com) or [Zeit](https://zeit.co/)).
 
 After the deployment, add a webhook to your GitHub repository
-    1. Go to your repository’s Settings > Webhooks > Add webhook
-    2. Paste there the URL of your deployed service, e.g. http://copycat.example.org/webhook/push
+1. Go to your repository’s Settings > Webhooks > Add webhook
+2. Paste there the URL of your deployed service, e.g. http://copycat.example.org/webhook/push
 
 # Changelog
 
