@@ -2,7 +2,7 @@
 
 # Copycat
 
-Copycat is a tool to synchronize files between repositories.
+Copycat is a tool for synchronizing files between repositories.
 
 It can:
 - create a web server,
